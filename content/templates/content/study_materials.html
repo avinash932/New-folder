@@ -1,0 +1,166 @@
+{% extends "content/base.html" %}
+
+{% block title %}Free Study Materials - PDF Downloads{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Hero Section -->
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold mb-3">Free Study Materials</h1>
+        <p class="lead mb-4">
+            Download PDF notes, formula sheets, and study guides completely free.
+            No registration required.
+        </p>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="input-group input-group-lg">
+                    <input type="text" class="form-control" placeholder="Search study materials...">
+                    <button class="btn btn-primary" type="button">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Stats -->
+    <div class="row mb-5">
+        <div class="col-md-3 col-6 text-center">
+            <div class="stats-card">
+                <h3 class="fw-bold text-primary">{{ total_pdfs|default:"50+" }}</h3>
+                <p class="text-muted mb-0">PDF Downloads</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 text-center">
+            <div class="stats-card">
+                <h3 class="fw-bold text-primary">{{ categories|length|default:"10+" }}</h3>
+                <p class="text-muted mb-0">Subjects</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 text-center">
+            <div class="stats-card">
+                <h3 class="fw-bold text-primary">100%</h3>
+                <p class="text-muted mb-0">Free Access</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 text-center">
+            <div class="stats-card">
+                <h3 class="fw-bold text-primary">24/7</h3>
+                <p class="text-muted mb-0">Available</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- PDF Categories -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="mb-4">Browse by Subject</h3>
+            <div class="d-flex flex-wrap gap-2">
+                {% for category in categories %}
+                <a href="#" class="btn btn-outline-primary">
+                    <i class="{{ category.icon|default:'fas fa-folder' }} me-2"></i>
+                    {{ category.name }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- PDF List -->
+    <div class="row">
+        {% if pdfs %}
+            {% for pdf in pdfs %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <span class="badge bg-primary">{{ pdf.category }}</span>
+                            </div>
+                            <i class="fas fa-file-pdf fa-2x text-danger"></i>
+                        </div>
+                        
+                        <h5 class="card-title fw-bold">{{ pdf.title }}</h5>
+                        
+                        {% if pdf.description %}
+                        <p class="card-text text-muted small">{{ pdf.description }}</p>
+                        {% endif %}
+                        
+                        {% if pdf.size %}
+                        <p class="small text-muted mb-2">
+                            <i class="fas fa-file-alt me-1"></i> Size: {{ pdf.size }}
+                        </p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="card-footer bg-transparent">
+                        <div class="d-grid gap-2">
+                            {% if pdf.sample %}
+                            <button class="btn btn-outline-primary" disabled>
+                                <i class="fas fa-download me-2"></i> Coming Soon
+                            </button>
+                            {% else %}
+                            <a href="{{ pdf.pdf_url }}" class="btn btn-primary" download>
+                                <i class="fas fa-download me-2"></i> Download PDF
+                            </a>
+                            {% endif %}
+                            
+                            {% if pdf.video_url %}
+                            <a href="{{ pdf.video_url }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-play-circle me-2"></i> Watch Video
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="col-12 text-center py-5">
+            <i class="fas fa-file-pdf fa-4x text-muted mb-3"></i>
+            <h4>Study Materials Coming Soon!</h4>
+            <p class="text-muted">We're preparing high-quality study materials for you.</p>
+            <a href="{% url 'video_list' %}" class="btn btn-primary mt-3">
+                <i class="fas fa-video me-2"></i> Browse Videos
+            </a>
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- How to Use -->
+    <div class="row mt-5 pt-5 border-top">
+        <div class="col-12">
+            <h3 class="mb-4">How to Use Study Materials</h3>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-search fa-2x text-primary"></i>
+                        </div>
+                        <h5>1. Find Your Topic</h5>
+                        <p class="text-muted small">Browse by subject or search for specific topics</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-download fa-2x text-primary"></i>
+                        </div>
+                        <h5>2. Download PDF</h5>
+                        <p class="text-muted small">Click download to save PDF to your device</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-print fa-2x text-primary"></i>
+                        </div>
+                        <h5>3. Print & Study</h5>
+                        <p class="text-muted small">Print or study digitally - your choice!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

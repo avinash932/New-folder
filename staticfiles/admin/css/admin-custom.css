@@ -1,0 +1,208 @@
+/* ==============================================
+   EDULEARN ADMIN CUSTOM STYLES
+   ============================================== */
+
+/* General Admin Improvements */
+#header {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: white;
+}
+
+#branding h1 {
+    color: white;
+    font-weight: bold;
+}
+
+.module h2, .module caption, .inline-group h2 {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+div.breadcrumbs {
+    background: #4a5568;
+    color: white;
+}
+
+/* Video Content Form Styling */
+#content-form .field-content textarea {
+    height: 400px !important;
+    font-family: 'Courier New', monospace !important;
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+}
+
+#content-form .field-practice_questions textarea,
+#content-form .field-important_points textarea {
+    height: 200px !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+}
+
+/* YouTube Preview Styling */
+.youtube-preview {
+    background: #f8f9fa !important;
+    padding: 15px !important;
+    border-radius: 8px !important;
+    margin: 15px 0 !important;
+    border-left: 4px solid #ff0000 !important;
+}
+
+.youtube-preview h4 {
+    color: #ff0000 !important;
+    margin-bottom: 10px !important;
+    font-size: 16px !important;
+}
+
+.youtube-preview img {
+    max-width: 200px !important;
+    border-radius: 5px !important;
+    border: 2px solid #ddd !important;
+    margin: 10px 0 !important;
+}
+
+.youtube-preview .small {
+    font-size: 12px !important;
+    color: #666 !important;
+}
+
+/* Thumbnail Preview */
+.admin-thumbnail {
+    max-width: 200px !important;
+    max-height: 150px !important;
+    border: 2px solid #ddd !important;
+    border-radius: 5px !important;
+    margin: 10px 0 !important;
+    padding: 5px !important;
+    background: white !important;
+}
+
+/* Form Field Groups */
+fieldset.module {
+    border: 2px solid #e9ecef !important;
+    border-radius: 8px !important;
+    padding: 20px !important;
+    margin-bottom: 20px !important;
+}
+
+fieldset.module h2 {
+    border-radius: 6px 6px 0 0 !important;
+    padding: 10px 15px !important;
+    margin: -20px -20px 20px -20px !important;
+}
+
+/* Input Fields Styling */
+input[type="text"], 
+input[type="url"], 
+input[type="email"], 
+textarea, 
+select {
+    border: 1px solid #ced4da !important;
+    border-radius: 4px !important;
+    padding: 8px 12px !important;
+}
+
+input[type="text"]:focus, 
+input[type="url"]:focus, 
+textarea:focus, 
+select:focus {
+    border-color: #667eea !important;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+}
+
+/* Submit Button Styling */
+input[type="submit"], 
+input[type="button"], 
+.submit-row input {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    border: none !important;
+    border-radius: 4px !important;
+    padding: 10px 20px !important;
+    color: white !important;
+    font-weight: bold !important;
+    text-transform: uppercase !important;
+}
+
+input[type="submit"]:hover, 
+input[type="button"]:hover, 
+.submit-row input:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Help Text Styling */
+.help {
+    color: #6c757d !important;
+    font-size: 12px !important;
+    margin-top: 5px !important;
+    padding: 5px 10px !important;
+    background: #f8f9fa !important;
+    border-radius: 4px !important;
+    border-left: 3px solid #6c757d !important;
+}
+
+/* Required Field Indicator */
+.required label:after {
+    content: " *" !important;
+    color: #dc3545 !important;
+}
+
+/* Object Tools Styling */
+.object-tools {
+    margin-top: 0 !important;
+}
+
+.object-tools a {
+    background: #28a745 !important;
+    border-radius: 4px !important;
+    padding: 8px 15px !important;
+}
+
+.object-tools a:hover {
+    background: #218838 !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Pagination Styling */
+.paginator {
+    background: #f8f9fa !important;
+    border-radius: 4px !important;
+    padding: 10px !important;
+}
+
+.paginator a:link, .paginator a:visited {
+    color: #667eea !important;
+    padding: 5px 10px !important;
+    border-radius: 3px !important;
+}
+
+.paginator a:hover {
+    background: #667eea !important;
+    color: white !important;
+}
+
+/* Filter Sidebar */
+#changelist-filter {
+    background: #f8f9fa !important;
+    border-radius: 8px !important;
+    padding: 15px !important;
+}
+
+#changelist-filter h2 {
+    background: none !important;
+    color: #2c3e50 !important;
+    font-size: 16px !important;
+    padding: 0 0 10px 0 !important;
+    border-bottom: 2px solid #667eea !important;
+}
+
+/* Responsive Admin */
+@media (max-width: 768px) {
+    #content-form .field-content textarea {
+        height: 300px !important;
+    }
+    
+    fieldset.module {
+        padding: 15px !important;
+        margin: 10px !important;
+    }
+}

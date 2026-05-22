@@ -1,0 +1,151 @@
+{% extends "content/base.html" %}
+
+{% block title %}Free Education Platform - EduVideos{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Free Education for Everyone</h1>
+                <p class="lead mb-4">
+                    Access high-quality educational videos, study materials, and resources 
+                    completely free. From Class 8 to competitive exams, we've got you covered.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{% url 'video_list' %}" class="btn btn-light btn-lg">
+                        <i class="fas fa-play-circle me-2"></i> Browse Videos
+                    </a>
+                    <a href="#categories" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-list me-2"></i> View Categories
+                    </a>
+                </div>
+                
+                <!-- Stats -->
+                <div class="row mt-5">
+                    <div class="col-md-4 col-6">
+                        <div class="text-white">
+                            <h3 class="fw-bold display-6">{{ total_videos|default:"500+" }}</h3>
+                            <p class="mb-0 opacity-75">Videos</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-6">
+                        <div class="text-white">
+                            <h3 class="fw-bold display-6">{{ categories|length|default:"10+" }}</h3>
+                            <p class="mb-0 opacity-75">Categories</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-6">
+                        <div class="text-white">
+                            <h3 class="fw-bold display-6">24/7</h3>
+                            <p class="mb-0 opacity-75">Access</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mt-5 mt-lg-0">
+                <div class="position-relative">
+                    <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+                         alt="Education" 
+                         class="img-fluid rounded-3 shadow-lg">
+                    <div class="position-absolute bottom-0 start-0 m-4">
+                        <div class="bg-white rounded-3 p-3 shadow">
+                            <i class="fas fa-play-circle text-primary fa-2x me-2"></i>
+                            <span class="fw-bold">Start Learning Today!</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section id="categories" class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="h1 fw-bold mb-3">Browse by Category</h2>
+            <p class="text-muted lead">Select your subject or category to get started</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for category in categories %}
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <a href="{% url 'videos_by_category' category.slug %}" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100 text-center hover-effect">
+                        <div class="card-body py-5">
+                            <div class="mb-3">
+                                <i class="{{ category.icon|default:'fas fa-folder' }} fa-3x text-primary"></i>
+                            </div>
+                            <h4 class="card-title fw-bold">{{ category.name }}</h4>
+                            <p class="card-text text-muted small">
+                                {{ category.description|truncatechars:80|default:"Educational videos" }}
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Featured Videos -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <h2 class="h1 fw-bold">Featured Videos</h2>
+                <p class="text-muted">Handpicked educational content for you</p>
+            </div>
+            <a href="{% url 'video_list' %}" class="btn btn-primary">
+                View All <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+        
+        <div class="row">
+            {% for video in featured_videos %}
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card video-card h-100">
+                    <div class="position-relative">
+                        <img src="{{ video.get_thumbnail_url }}" 
+                             class="card-img-top video-thumbnail" 
+                             alt="{{ video.title }}">
+                        <div class="play-button-overlay">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">{{ video.title|truncatechars:50 }}</h5>
+                        {% if video.category %}
+                        <span class="badge bg-primary mb-2">{{ video.category.name }}</span>
+                        {% endif %}
+                        <p class="card-text small text-muted">{{ video.description|truncatechars:80 }}</p>
+                    </div>
+                    
+                    <div class="card-footer bg-transparent">
+                        {% if video.slug and video.slug.strip %}
+                            <a href="{% url 'video_detail' video.slug %}" class="btn btn-sm btn-primary w-100">
+                                <i class="fas fa-play me-2"></i> Watch Now
+                            </a>
+                        {% else %}
+                            <button class="btn btn-sm btn-danger w-100" disabled>
+                                <i class="fas fa-exclamation-triangle me-2"></i> Unavailable
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-video-slash fa-3x text-muted mb-3"></i>
+                <h4>No featured videos available</h4>
+                <p class="text-muted">Check back later for new content</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

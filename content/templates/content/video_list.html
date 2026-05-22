@@ -1,0 +1,349 @@
+{% extends "content/base.html" %}
+
+{% block title %}All Educational Videos - Free Access{% endblock %}
+
+{% block extra_css %}
+<style>
+    .filter-sidebar {
+        position: sticky;
+        top: 90px;
+    }
+    
+    .filter-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+    
+    .filter-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 15px 20px;
+        font-weight: 600;
+    }
+    
+    .filter-body {
+        padding: 20px;
+    }
+    
+    .filter-item {
+        margin-bottom: 10px;
+        cursor: pointer;
+        padding: 8px 12px;
+        border-radius: 8px;
+        transition: all 0.3s;
+    }
+    
+    .filter-item:hover {
+        background: #f8f9fa;
+    }
+    
+    .filter-item.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    .video-count-badge {
+        background: #e9ecef;
+        color: #495057;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        margin-left: auto;
+    }
+    
+    .clear-filters {
+        color: #dc3545;
+        text-decoration: none;
+        font-size: 0.9rem;
+    }
+    
+    .clear-filters:hover {
+        text-decoration: underline;
+    }
+    
+    .sort-dropdown .btn {
+        border-radius: 10px;
+        padding: 8px 20px;
+    }
+    
+    .empty-state {
+        padding: 60px 20px;
+        text-align: center;
+    }
+    
+    .empty-state-icon {
+        font-size: 4rem;
+        color: #dee2e6;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="container py-4">
+    <div class="row align-items-center mb-4">
+        <div class="col-md-8">
+            <h1 class="h2 fw-bold mb-2">All Educational Videos</h1>
+            <p class="text-muted mb-0">
+                Browse our collection of free educational videos. No login required.
+            </p>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <div class="sort-dropdown">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="fas fa-sort me-2"></i> Sort By
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="?sort=newest">Newest First</a></li>
+                        <li><a class="dropdown-item" href="?sort=oldest">Oldest First</a></li>
+                        <li><a class="dropdown-item" href="?sort=popular">Most Popular</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Search Results Info -->
+    {% if search_query %}
+    <div class="alert alert-info mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <i class="fas fa-search me-2"></i>
+                Showing results for "<strong>{{ search_query }}</strong>"
+                <span class="badge bg-primary ms-2">{{ total_videos }} videos</span>
+            </div>
+            <a href="{% url 'video_list' %}" class="clear-filters">
+                <i class="fas fa-times me-1"></i> Clear Search
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<div class="container pb-5">
+    <div class="row">
+        <!-- Sidebar Filters -->
+        <div class="col-lg-3">
+            <div class="filter-sidebar">
+                <!-- Categories Filter -->
+                <div class="filter-card">
+                    <div class="filter-header">
+                        <i class="fas fa-folder me-2"></i> Categories
+                    </div>
+                    <div class="filter-body">
+                        <div class="filter-item {% if not selected_category %}active{% endif %}" 
+                             onclick="window.location='{% url 'video_list' %}'">
+                            All Categories
+                            <span class="video-count-badge">{{ total_videos }}</span>
+                        </div>
+                        
+                        {% for category in categories %}
+                        <div class="filter-item {% if selected_category == category.slug %}active{% endif %}" 
+                             onclick="window.location='{% url 'videos_by_category' category.slug %}'">
+                            <i class="{{ category.icon|default:'fas fa-folder' }} me-2"></i>
+                            {{ category.name }}
+                            <span class="video-count-badge">{{ category.videos.count }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Topics Filter -->
+                <div class="filter-card">
+                    <div class="filter-header">
+                        <i class="fas fa-tags me-2"></i> Topics
+                    </div>
+                    <div class="filter-body">
+                        <div class="filter-item {% if not selected_topic %}active{% endif %}" 
+                             onclick="window.location='{% url 'video_list' %}'">
+                            All Topics
+                        </div>
+                        
+                        {% for topic in topics %}
+                        <div class="filter-item {% if selected_topic == topic.slug %}active{% endif %}" 
+                             onclick="window.location='{% url 'videos_by_topic' topic.slug %}'">
+                            {{ topic.name }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Clear All Filters -->
+                {% if selected_category or selected_topic or search_query %}
+                <div class="text-center mt-3">
+                    <a href="{% url 'video_list' %}" class="btn btn-outline-danger btn-sm w-100">
+                        <i class="fas fa-filter-circle-xmark me-2"></i> Clear All Filters
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Videos Grid -->
+        <div class="col-lg-9">
+            {% if videos %}
+                <div class="row">
+                    {% for video in videos %}
+                    <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
+                        <div class="card video-card h-100">
+                            <div class="position-relative">
+                                <img src="{{ video.get_thumbnail_url }}" 
+                                     class="card-img-top video-thumbnail" 
+                                     alt="{{ video.title }}"
+                                     style="height: 180px; object-fit: cover;">
+                                <div class="play-button-overlay">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                                
+                                {% if video.duration %}
+                                <div class="position-absolute bottom-0 end-0 m-2">
+                                    <span class="badge bg-dark bg-opacity-75">{{ video.duration }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="card-body">
+                                <h5 class="card-title fw-bold mb-2">{{ video.title|truncatechars:60 }}</h5>
+                                
+                                <!-- Categories -->
+                                <div class="mb-3">
+                                    {% if video.category %}
+                                    <span class="category-badge me-1">
+                                        {{ video.category.name }}
+                                    </span>
+                                    {% endif %}
+                                    
+                                    {% if video.topic %}
+                                    <span class="badge bg-secondary">
+                                        {{ video.topic.name|truncatechars:15 }}
+                                    </span>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Description -->
+                                {% if video.description %}
+                                <p class="card-text text-muted small mb-3">
+                                    {{ video.description|truncatechars:100 }}
+                                </p>
+                                {% endif %}
+                                
+                                <!-- Stats -->
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">
+                                        <i class="far fa-calendar me-1"></i>
+                                        {{ video.created_at|date:"M d, Y" }}
+                                    </small>
+                                    
+                                    <small class="text-muted">
+                                        <i class="fas fa-video me-1"></i>
+                                        {{ video.content_type|title }}
+                                    </small>
+                                </div>
+                            </div>
+                            
+                            <div class="card-footer bg-transparent border-top-0 pt-0">
+                                <div class="d-grid">
+                                    <!-- SAFE URL CHECK -->
+                                    {% if video.slug and video.slug.strip %}
+                                        <a href="{% url 'video_detail' video.slug %}" class="btn btn-primary">
+                                            <i class="fas fa-play-circle me-2"></i> Watch Now
+                                        </a>
+                                    {% else %}
+                                        <span class="btn btn-danger" disabled>
+                                            <i class="fas fa-exclamation-triangle me-2"></i> Link Unavailable
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <!-- Empty State -->
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-video-slash"></i>
+                    </div>
+                    <h3 class="mb-3">No Videos Found</h3>
+                    <p class="text-muted mb-4">
+                        {% if search_query %}
+                        No videos found for "{{ search_query }}". Try a different search term.
+                        {% elif selected_category %}
+                        No videos found in this category. Check other categories.
+                        {% else %}
+                        No videos available at the moment. Please check back later.
+                        {% endif %}
+                    </p>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="{% url 'video_list' %}" class="btn btn-primary">
+                            <i class="fas fa-redo me-2"></i> View All Videos
+                        </a>
+                        <a href="{% url 'home' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-home me-2"></i> Go to Home
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+            
+            <!-- Video Count Info -->
+            {% if videos %}
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="alert alert-light d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-info-circle me-2"></i>
+                            Showing <strong>{{ videos|length }}</strong> of <strong>{{ total_videos }}</strong> videos
+                        </div>
+                        <div>
+                            <a href="#top" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-arrow-up me-1"></i> Back to Top
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Make video cards clickable
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.video-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                // Don't trigger if clicking on buttons or disabled elements
+                if (e.target.closest('a') || 
+                    e.target.closest('button') || 
+                    e.target.closest('.btn-danger') ||
+                    card.querySelector('button:disabled')) {
+                    return;
+                }
+                
+                const link = this.querySelector('a.btn-primary');
+                if (link) {
+                    window.location.href = link.href;
+                }
+            });
+            
+            // Add cursor pointer
+            card.style.cursor = 'pointer';
+        });
+    });
+    
+    // Quick filter functionality
+    function applyFilter(type, value) {
+        const url = new URL(window.location.href);
+        url.searchParams.set(type, value);
+        window.location.href = url.toString();
+    }
+</script>
+{% endblock %}git config --global user.name "Your Name"
